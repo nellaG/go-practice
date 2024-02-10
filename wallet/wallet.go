@@ -2,16 +2,30 @@ package main
 
 import "fmt"
 
+type Bitcoin int
+
 type Wallet struct {
-	balance int // private (starts with lowercase)
+	balance Bitcoin // private (starts with lowercase)
+}
+
+type Stringer interface {
+	String() string
+}
+
+func (b Bitcoin) String() string {
+	return fmt.Sprintf("%d BTC", b)
 }
 
 // method
-func (w *Wallet) Deposit(amount int) {
+func (w *Wallet) Deposit(amount Bitcoin) {
 	fmt.Printf("address of balance in deposit is %p \n", &w.balance)
 	w.balance += amount
 }
 
-func (w Wallet) Balance() int {
+func (w Wallet) Balance() Bitcoin {
 	return w.balance
+}
+
+func (w *Wallet) Withdraw(amount Bitcoin) {
+	w.balance -= amount
 }
