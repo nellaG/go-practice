@@ -2,15 +2,24 @@ package main
 
 import "testing"
 
-var value = "this is just a test"
-
 func TestSearch(t *testing.T) {
-	dict := Dictionary{"test": value}
+	dict := Dictionary{"test": known}
 
-	got := dict.Search("test")
-	want := value
+	t.Run("known word", func(t *testing.T) {
+		got, _ := dict.Search("test")
+		want := known
+		assertStrings(t, got, want)
+	})
 
-	assertStrings(t, got, want)
+	t.Run("unknown word", func(t *testing.T) {
+		_, err := dict.Search("unknown")
+		want := unknown
+
+		if err == nil {
+			t.Fatal("expected to get an error.")
+		}
+		assertStrings(t, err.Error(), want)
+	})
 }
 
 func assertStrings(t testing.TB, got, want string) {
