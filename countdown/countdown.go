@@ -13,13 +13,33 @@ const (
 )
 
 func main() {
-	Countdown(os.Stdout)
+	sleeper := &DefaultSleeper{}
+	Countdown(os.Stdout, sleeper)
 }
 
-func Countdown(out io.Writer) {
+type SpySleeper struct {
+	Calls int
+}
+
+type Sleeper interface {
+	Sleep()
+}
+
+func (s *SpySleeper) Sleep() {
+	s.Calls++
+}
+
+type DefaultSleeper struct{}
+
+func (d *DefaultSleeper) Sleep() {
+	time.Sleep(1 * time.Second)
+}
+
+// mock Sleep for making test faster
+func Countdown(out io.Writer, sleeper Sleeper) {
 	for i := countdownStart; i > 0; i-- {
 		fmt.Fprintln(out, i)
-		time.Sleep(1 * time.Second)
+		sleeper.Sleep()
 	}
 	fmt.Fprint(out, finalWord)
 }
