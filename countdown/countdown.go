@@ -15,7 +15,7 @@ const (
 )
 
 func main() {
-	sleeper := &DefaultSleeper{}
+	sleeper := &ConfigurableSleeper{1 * time.Second, time.Sleep}
 	Countdown(os.Stdout, sleeper)
 }
 
@@ -29,12 +29,6 @@ type Sleeper interface {
 
 func (s *SpySleeper) Sleep() {
 	s.Calls++
-}
-
-type DefaultSleeper struct{}
-
-func (d *DefaultSleeper) Sleep() {
-	time.Sleep(1 * time.Second)
 }
 
 type SpyCountdownOperations struct {
